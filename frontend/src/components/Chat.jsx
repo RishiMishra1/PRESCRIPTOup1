@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { getGeminiResponse } from "../context/chatService";
 
-const Chat = () => {
+const Chat = ({ closeChat }) => { // Accept closeChat as a prop
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,27 +22,54 @@ const Chat = () => {
       setLoading(false);
     }
 
-    setInput("");
+    setInput(""); // Reset input field
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      sendMessage(); // Send message when Enter is pressed
+    }
   };
 
   return (
-    <div>
-      <div style={{ height: "300px", overflowY: "scroll", border: "1px solid #ccc", padding: "10px" }}>
+    <div className="flex flex-col h-full bg-white p-4 border-2 border-gray-300 rounded-lg">
+      <div className="flex items-center justify-between">
+        <span className="font-semibold text-lg">Chatbot</span>
+        <button onClick={closeChat} className="text-xl text-gray-500 hover:text-gray-800">
+          &times;
+        </button>
+      </div>
+      <div
+        style={{ height: "300px", overflowY: "scroll" }}
+        className="border-2 border-gray-300 rounded-t-lg p-2 mb-4"
+      >
         {messages.map((msg, index) => (
-          <p key={index} style={{ textAlign: msg.sender === "user" ? "right" : "left" }}>
-            <strong>{msg.sender === "user" ? "You: " : "Bot: "}</strong>{msg.text}
-          </p>
+          <div key={index} className={`py-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
+            <div
+              className={`inline-block max-w-xs p-3 rounded-lg ${msg.sender === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
+            >
+              <strong>{msg.sender === "user" ? "You: " : "Bot: "}</strong>{msg.text}
+            </div>
+          </div>
         ))}
       </div>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="Type a message..."
-      />
-      <button onClick={sendMessage} disabled={loading}>
-        {loading ? "Sending..." : "Send"}
-      </button>
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyPress} // Listen for Enter key press
+          placeholder="Type a message..."
+          className="border-2 border-gray-300 p-2 w-full rounded-md"
+        />
+        <button
+          onClick={sendMessage}
+          disabled={loading}
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          {loading ? "Sending..." : "Send"}
+        </button>
+      </div>
     </div>
   );
 };
