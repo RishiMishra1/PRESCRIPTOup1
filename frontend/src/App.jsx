@@ -4,7 +4,7 @@ import Home from './pages/Home'
 import Doctors from './pages/Doctors'
 import Login from './pages/Login'
 import About from './pages/About'
-import Chat from './components/Chat'
+
 
 import Contact from './pages/Contact'
 import Appointment from './pages/Appointment'
@@ -35,7 +35,7 @@ const App = () => {
 
       </Routes>
       <Footer/>
-      <Chat />
+      
     </div>
   )
 }
